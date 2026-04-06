@@ -630,6 +630,8 @@ export function CardDetailView({
 										defaultMode={selection.card.startInPlanMode ? "plan" : "act"}
 										workspaceId={currentProjectId}
 										runtimeConfig={runtimeConfig}
+										taskClineProviderId={selection.card.clineProviderId}
+										taskClineModelId={selection.card.clineModelId}
 										onClineSettingsSaved={onClineSettingsSaved}
 										onClineModelChanged={onClineModelChanged}
 										onSendMessage={onSendClineChatMessage}

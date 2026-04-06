@@ -87,6 +87,10 @@ export interface ClineAgentChatPanelProps {
 	showComposerModeToggle?: boolean;
 	workspaceId?: string | null;
 	runtimeConfig?: RuntimeConfigResponse | null;
+	/** Task-level provider override – when set, the model picker initialises to this provider instead of the global default. */
+	taskClineProviderId?: string;
+	/** Task-level model override – when set, the model picker initialises to this model instead of the global default. */
+	taskClineModelId?: string;
 	onClineSettingsSaved?: () => void;
 	onClineModelChanged?: (providerId: string, modelId: string) => void;
 	onSendMessage?: (
@@ -120,6 +124,8 @@ export const ClineAgentChatPanel = React.forwardRef<ClineAgentChatPanelHandle, C
 			showComposerModeToggle = true,
 			workspaceId = null,
 			runtimeConfig = null,
+			taskClineProviderId,
+			taskClineModelId,
 			onClineSettingsSaved,
 			onClineModelChanged,
 			onSendMessage,
@@ -187,6 +193,8 @@ export const ClineAgentChatPanel = React.forwardRef<ClineAgentChatPanelHandle, C
 			workspaceId,
 			selectedAgentId: "cline",
 			config: runtimeConfig,
+			taskClineProviderId,
+			taskClineModelId,
 		});
 
 		const modelPickerOptions = useMemo(
