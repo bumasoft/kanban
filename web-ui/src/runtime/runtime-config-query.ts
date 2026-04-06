@@ -6,6 +6,9 @@ import type {
 	RuntimeAgentId,
 	RuntimeClineAccountProfileResponse,
 	RuntimeClineAddProviderResponse,
+	RuntimeClineDeviceAuthCompleteRequest,
+	RuntimeClineDeviceAuthCompleteResponse,
+	RuntimeClineDeviceAuthStartResponse,
 	RuntimeClineKanbanAccessResponse,
 	RuntimeClineMcpAuthStatusResponse,
 	RuntimeClineMcpOAuthResponse,
@@ -155,6 +158,19 @@ export async function runClineProviderOauthLogin(
 ): Promise<RuntimeClineOauthLoginResponse> {
 	const trpcClient = getRuntimeTrpcClient(workspaceId);
 	return await trpcClient.runtime.runClineProviderOAuthLogin.mutate(input);
+}
+
+export async function startClineDeviceAuth(workspaceId: string | null): Promise<RuntimeClineDeviceAuthStartResponse> {
+	const trpcClient = getRuntimeTrpcClient(workspaceId);
+	return await trpcClient.runtime.startClineDeviceAuth.mutate();
+}
+
+export async function completeClineDeviceAuth(
+	workspaceId: string | null,
+	input: RuntimeClineDeviceAuthCompleteRequest,
+): Promise<RuntimeClineDeviceAuthCompleteResponse> {
+	const trpcClient = getRuntimeTrpcClient(workspaceId);
+	return await trpcClient.runtime.completeClineDeviceAuth.mutate(input);
 }
 
 export async function fetchClineMcpSettings(workspaceId: string | null): Promise<RuntimeClineMcpSettingsResponse> {

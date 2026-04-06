@@ -17,6 +17,7 @@ import { updateGlobalRuntimeConfig, updateRuntimeConfig } from "../config/runtim
 import type { RuntimeCommandRunResponse } from "../core/api-contract";
 import {
 	parseClineAddProviderRequest,
+	parseClineDeviceAuthCompleteRequest,
 	parseClineMcpOAuthRequest,
 	parseClineMcpSettingsSaveRequest,
 	parseClineOauthLoginRequest,
@@ -499,6 +500,18 @@ export function createRuntimeApi(deps: CreateRuntimeApiDependencies): RuntimeTrp
 			const body = parseClineOauthLoginRequest(input);
 			return await clineProviderService.runOauthLogin({
 				providerId: body.provider,
+				baseUrl: body.baseUrl,
+			});
+		},
+		startClineDeviceAuth: async () => {
+			return await clineProviderService.startDeviceAuth();
+		},
+		completeClineDeviceAuth: async (_workspaceScope, input) => {
+			const body = parseClineDeviceAuthCompleteRequest(input);
+			return await clineProviderService.completeDeviceAuth({
+				deviceCode: body.deviceCode,
+				expiresInSeconds: body.expiresInSeconds,
+				pollIntervalSeconds: body.pollIntervalSeconds,
 				baseUrl: body.baseUrl,
 			});
 		},

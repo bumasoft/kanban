@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import {
 	type RuntimeClineAddProviderRequest,
+	type RuntimeClineDeviceAuthCompleteRequest,
 	type RuntimeClineMcpOAuthRequest,
 	type RuntimeClineMcpSettingsSaveRequest,
 	type RuntimeClineOauthLoginRequest,
@@ -31,6 +32,7 @@ import {
 	type RuntimeWorktreeDeleteRequest,
 	type RuntimeWorktreeEnsureRequest,
 	runtimeClineAddProviderRequestSchema,
+	runtimeClineDeviceAuthCompleteRequestSchema,
 	runtimeClineMcpOAuthRequestSchema,
 	runtimeClineMcpSettingsSaveRequestSchema,
 	runtimeClineOauthLoginRequestSchema,
@@ -516,6 +518,14 @@ export function parseClineMcpOAuthRequest(value: unknown): RuntimeClineMcpOAuthR
 
 export function parseClineOauthLoginRequest(value: unknown): RuntimeClineOauthLoginRequest {
 	const parsed = parseWithSchema(runtimeClineOauthLoginRequestSchema, value);
+	return {
+		...parsed,
+		baseUrl: typeof parsed.baseUrl === "string" ? parsed.baseUrl.trim() || null : parsed.baseUrl,
+	};
+}
+
+export function parseClineDeviceAuthCompleteRequest(value: unknown): RuntimeClineDeviceAuthCompleteRequest {
+	const parsed = parseWithSchema(runtimeClineDeviceAuthCompleteRequestSchema, value);
 	return {
 		...parsed,
 		baseUrl: typeof parsed.baseUrl === "string" ? parsed.baseUrl.trim() || null : parsed.baseUrl,
