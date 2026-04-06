@@ -1,4 +1,5 @@
 import type {
+	RuntimeAgentId,
 	RuntimeBoardCard,
 	RuntimeBoardColumnId,
 	RuntimeBoardData,
@@ -15,6 +16,9 @@ export interface RuntimeCreateTaskInput {
 	autoReviewEnabled?: boolean;
 	autoReviewMode?: RuntimeTaskAutoReviewMode;
 	images?: RuntimeTaskImage[];
+	agentId?: RuntimeAgentId;
+	clineProviderId?: string;
+	clineModelId?: string;
 	baseRef: string;
 }
 
@@ -24,6 +28,9 @@ export interface RuntimeUpdateTaskInput {
 	autoReviewEnabled?: boolean;
 	autoReviewMode?: RuntimeTaskAutoReviewMode;
 	images?: RuntimeTaskImage[];
+	agentId?: RuntimeAgentId | null;
+	clineProviderId?: string | null;
+	clineModelId?: string | null;
 	baseRef: string;
 }
 
@@ -284,6 +291,9 @@ export function addTaskToColumn(
 		autoReviewEnabled: Boolean(input.autoReviewEnabled),
 		autoReviewMode: normalizeTaskAutoReviewMode(input.autoReviewMode),
 		images: cloneTaskImages(input.images),
+		...(input.agentId ? { agentId: input.agentId } : {}),
+		...(input.clineProviderId ? { clineProviderId: input.clineProviderId } : {}),
+		...(input.clineModelId ? { clineModelId: input.clineModelId } : {}),
 		baseRef,
 		createdAt: now,
 		updatedAt: now,
@@ -597,6 +607,10 @@ export function updateTask(
 				autoReviewEnabled: Boolean(input.autoReviewEnabled),
 				autoReviewMode: normalizeTaskAutoReviewMode(input.autoReviewMode),
 				images: input.images === undefined ? card.images : cloneTaskImages(input.images),
+				agentId: input.agentId === undefined ? card.agentId : (input.agentId ?? undefined),
+				clineProviderId:
+					input.clineProviderId === undefined ? card.clineProviderId : (input.clineProviderId ?? undefined),
+				clineModelId: input.clineModelId === undefined ? card.clineModelId : (input.clineModelId ?? undefined),
 				baseRef,
 				updatedAt: now,
 			};
