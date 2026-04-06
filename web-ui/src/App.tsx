@@ -67,7 +67,7 @@ import { useRuntimeProjectConfig } from "@/runtime/use-runtime-project-config";
 import { useTerminalConnectionReady } from "@/runtime/use-terminal-connection-ready";
 import { useWorkspacePersistence } from "@/runtime/use-workspace-persistence";
 import { saveWorkspaceState } from "@/runtime/workspace-state-query";
-import { findCardSelection } from "@/state/board-state";
+import { findCardSelection, updateTask } from "@/state/board-state";
 import {
 	getTaskWorkspaceInfo,
 	getTaskWorkspaceSnapshot,
@@ -294,6 +294,12 @@ export default function App(): ReactElement {
 		isNewTaskStartInPlanModeDisabled,
 		newTaskBranchRef,
 		setNewTaskBranchRef,
+		newTaskAgentId,
+		setNewTaskAgentId,
+		newTaskClineProviderId,
+		setNewTaskClineProviderId,
+		newTaskClineModelId,
+		setNewTaskClineModelId,
 		editingTaskId,
 		editTaskPrompt,
 		setEditTaskPrompt,
@@ -308,6 +314,12 @@ export default function App(): ReactElement {
 		isEditTaskStartInPlanModeDisabled,
 		editTaskBranchRef,
 		setEditTaskBranchRef,
+		editTaskAgentId,
+		setEditTaskAgentId,
+		editTaskClineProviderId,
+		setEditTaskClineProviderId,
+		editTaskClineModelId,
+		setEditTaskClineModelId,
 		handleOpenCreateTask,
 		handleCancelCreateTask,
 		handleOpenEditTask,
@@ -706,6 +718,34 @@ export default function App(): ReactElement {
 		selectedCard?.card.id,
 		latestTaskChatMessage,
 	);
+	const handleClineModelChangedForTask = useCallback(
+		(providerId: string, modelId: string) => {
+			if (!selectedCard) {
+				return;
+			}
+			const taskId = selectedCard.card.id;
+			setBoard((currentBoard) => {
+				const selection = findCardSelection(currentBoard, taskId);
+				if (!selection) {
+					return currentBoard;
+				}
+				const result = updateTask(currentBoard, taskId, {
+					prompt: selection.card.prompt,
+					startInPlanMode: selection.card.startInPlanMode,
+					autoReviewEnabled: selection.card.autoReviewEnabled,
+					autoReviewMode: selection.card.autoReviewMode,
+					images: selection.card.images,
+					agentId: selection.card.agentId,
+					clineProviderId: providerId || undefined,
+					clineModelId: modelId || undefined,
+					baseRef: selection.card.baseRef,
+				});
+				return result.updated ? result.board : currentBoard;
+			});
+		},
+		[selectedCard, setBoard],
+	);
+
 	const handleCreateDialogOpenChange = useCallback(
 		(open: boolean) => {
 			if (!open) {
@@ -735,6 +775,12 @@ export default function App(): ReactElement {
 			branchRef={editTaskBranchRef}
 			branchOptions={createTaskBranchOptions}
 			onBranchRefChange={setEditTaskBranchRef}
+			agentId={editTaskAgentId}
+			onAgentIdChange={setEditTaskAgentId}
+			clineProviderId={editTaskClineProviderId}
+			onClineProviderIdChange={setEditTaskClineProviderId}
+			clineModelId={editTaskClineModelId}
+			onClineModelIdChange={setEditTaskClineModelId}
 			mode="edit"
 			idPrefix={`inline-edit-task-${editingTaskId}`}
 		/>
@@ -1012,6 +1058,7 @@ export default function App(): ReactElement {
 									onBottomTerminalToggleExpand={handleToggleExpandDetailTerminal}
 									isDocumentVisible={isDocumentVisible}
 									onClineSettingsSaved={refreshRuntimeProjectConfig}
+									onClineModelChanged={handleClineModelChangedForTask}
 								/>
 							</div>
 						) : null}
@@ -1064,6 +1111,12 @@ export default function App(): ReactElement {
 					branchRef={newTaskBranchRef}
 					branchOptions={createTaskBranchOptions}
 					onBranchRefChange={setNewTaskBranchRef}
+					agentId={newTaskAgentId}
+					onAgentIdChange={setNewTaskAgentId}
+					clineProviderId={newTaskClineProviderId}
+					onClineProviderIdChange={setNewTaskClineProviderId}
+					clineModelId={newTaskClineModelId}
+					onClineModelIdChange={setNewTaskClineModelId}
 				/>
 				<ClearTrashDialog
 					open={isClearTrashDialogOpen}

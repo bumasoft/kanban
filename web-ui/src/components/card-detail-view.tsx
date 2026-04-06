@@ -235,6 +235,7 @@ export function CardDetailView({
 	onBottomTerminalToggleExpand,
 	isDocumentVisible = true,
 	onClineSettingsSaved,
+	onClineModelChanged,
 }: {
 	selection: CardSelection;
 	currentProjectId: string | null;
@@ -295,6 +296,7 @@ export function CardDetailView({
 	onBottomTerminalToggleExpand?: () => void;
 	isDocumentVisible?: boolean;
 	onClineSettingsSaved?: () => void;
+	onClineModelChanged?: (providerId: string, modelId: string) => void;
 }): React.ReactElement {
 	const [selectedPath, setSelectedPath] = useState<string | null>(null);
 	const [diffComments, setDiffComments] = useState<Map<string, DiffLineComment>>(new Map());
@@ -629,6 +631,7 @@ export function CardDetailView({
 										workspaceId={currentProjectId}
 										runtimeConfig={runtimeConfig}
 										onClineSettingsSaved={onClineSettingsSaved}
+										onClineModelChanged={onClineModelChanged}
 										onSendMessage={onSendClineChatMessage}
 										onCancelTurn={onCancelClineChatTurn}
 										onLoadMessages={onLoadClineChatMessages}
