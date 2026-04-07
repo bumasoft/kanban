@@ -59,6 +59,8 @@ export interface StartClineTaskSessionRequest {
 	taskId: string;
 	cwd: string;
 	prompt: string;
+	/** Normalized Kanban task title; written to SDK session metadata (best-effort). */
+	taskTitle?: string;
 	initialMessages?: ClineSdkPersistedMessage[];
 	images?: RuntimeTaskImage[];
 	resumeFromTrash?: boolean;
@@ -400,6 +402,7 @@ export class InMemoryClineTaskSessionService implements ClineTaskSessionService 
 					taskId: request.taskId,
 					cwd: request.cwd,
 					prompt: runtimePrompt,
+					taskTitle: request.taskTitle,
 					initialMessages: request.resumeFromTrash ? persistedResumeSnapshot?.messages : request.initialMessages,
 					images: request.images,
 					providerId,
